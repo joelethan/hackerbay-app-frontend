@@ -20,9 +20,13 @@ class App extends Component {
   handleClick() {
     // Get board length from user
     var dim = parseInt(prompt('Enter length of the board: '))
-    this.state.dim = dim
 
     if(dim) {
+
+      this.setState({
+        dim: dim
+      })
+
       // Create Array of squares
       var bod = Array(Math.pow(dim,2)).fill('') 
 
@@ -42,7 +46,9 @@ class App extends Component {
       }
       var l = getRandomInts(dim);
 
-      this.state.sprites = l
+    this.setState({
+      sprites: l
+    })
 
       //populate the grid with sprites
       var i;
@@ -54,10 +60,12 @@ class App extends Component {
 
       //Odd number board length
       if(dim%2){
+        // eslint-disable-next-line
         this.state.player = ((bod).length-1)/2
       }
       //Even number board length
       else{
+        // eslint-disable-next-line
         this.state.player = dim*(dim-1)/2
       }
         bod[this.state.player] = dim
@@ -71,60 +79,82 @@ class App extends Component {
       })
     }
   }
-  makeMove(nextMove){
-    switch(nextMove) {
-      case "playUp":
+
+  handleKeyPress = (event) => {
+
+    switch(event.key) {
+
+      case "ArrowUp":
       if(this.state.player >= this.state.dim){
-        this.state.board[this.state.player - this.state.dim] = this.state.board[this.state.player]
+
+        [this.state.board[this.state.player - this.state.dim], this.state.board[this.state.player]] =
+                  [this.state.board[this.state.player], this.state.board[this.state.player - this.state.dim]]
+        // eslint-disable-next-line
         this.state.board[this.state.player] = ''
-        this.state.player = this.state.player - this.state.dim
-        this.state.move=this.state.move+1
-        // this.state.message = this.state.message + ' '+this.state.move
+
+        this.setState({
+          player : this.state.player - this.state.dim,
+          move : this.state.move+1
+        })
       }
       break;
-      case "playRight":
-      if(this.state.board.length > this.state.player + 1){
-        this.state.board[this.state.player+1] = this.state.board[this.state.player]
-        this.state.board[this.state.player] = ''
-        this.state.player = this.state.player + 1
-        this.state.move=this.state.move+1
-        // this.state.message = this.state.message + ' '+moves+1
-      }
+
+      case "ArrowRight":
+      if((this.state.player + this.state.dim + 1)%this.state.dim){
+
+          [this.state.board[this.state.player+1], this.state.board[this.state.player]] = 
+                    [this.state.board[this.state.player], this.state.board[this.state.player+1]]
+          // eslint-disable-next-line
+          this.state.board[this.state.player] = ''
+
+          this.setState({
+            player : this.state.player + 1,
+            move : this.state.move + 1
+          }
+        )}
       break;
-      case "playDown":
+
+      case "ArrowDown":
       if(this.state.player < this.state.board.length - this.state.dim){
-        this.state.board[this.state.player + this.state.dim] = this.state.board[this.state.player]
+
+        [this.state.board[this.state.player + this.state.dim], this.state.board[this.state.player]] = 
+                  [this.state.board[this.state.player], this.state.board[this.state.player + this.state.dim]]
+        // eslint-disable-next-line
         this.state.board[this.state.player] = ''
-        this.state.player = this.state.player + this.state.dim
-        this.state.move=this.state.move+1
-        // this.state.message = this.state.message + ' '+moves+1
+
+        this.setState({
+          player : this.state.player + this.state.dim,
+          move : this.state.move+1
+        })
       }
       break;
-      case "playLeft":
-      if(this.state.player > 0){
-        this.state.board[this.state.player-1] = this.state.board[this.state.player]
+
+      case "ArrowLeft":
+      if((this.state.player + this.state.dim )%this.state.dim){
+
+        [this.state.board[this.state.player-1], this.state.board[this.state.player]] =
+                  [this.state.board[this.state.player], this.state.board[this.state.player-1]]
+        // eslint-disable-next-line  
         this.state.board[this.state.player] = ''
-        this.state.player = this.state.player - 1
-        this.state.move=this.state.move+1
-        // this.state.message = this.state.message + ' '+moves+1
+
+        this.setState({
+          player : this.state.player - 1,
+          move : this.state.move+1
+        })
       }
       break;
-      default:
     }
-  //////////////////////////////////// 
     this.setState({
       message: this.state.message ,board: this.state.board
     })
   }
-  
   
 
 
   render() {
     return (
       <div className="app-container">
-
-        <div style={this.state.brd} className="board">
+        <div style={this.state.brd} className="board" onKeyUp = {this.handleKeyPress} tabIndex="0">
         
         {this.state.board.map((cell) => {
           return <div style={this.state.sqr} className="square">{cell}</div>;
@@ -132,11 +162,6 @@ class App extends Component {
 
         </div>
         <br/><button onClick={() => this.handleClick()}>{this.state.message+' '+this.state.player+' '+this.state.move+' '+(this.state.board).length}</button><br/><br/>
-        
-        <button onClick={() => this.makeMove('playUp')}>playUp</button>
-        <button onClick={() => this.makeMove('playRight')}>playRight</button><br/>
-        <button onClick={() => this.makeMove('playDown')}>playDown</button>
-        <button onClick={() => this.makeMove('playLeft')}>playLeft</button>
       </div>
     )
   }
