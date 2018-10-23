@@ -22,6 +22,7 @@ class App extends Component {
     var dim = parseInt(prompt('Enter length of the board: '))
 
     if(dim) {
+      dim = Math.abs(dim)
 
       this.setState({
         dim: dim
@@ -50,10 +51,10 @@ class App extends Component {
       sprites: l
     })
 
-      //populate the grid with sprites
+      //populate the grid with the random sprites
       var i;
       for (i = 0; i < l.length; i++) {
-        bod[l[i]] = 'a'
+        bod[l[i]] = '.'
       }
 
       //Place the player in the grid
@@ -68,7 +69,7 @@ class App extends Component {
         // eslint-disable-next-line
         this.state.player = dim*(dim-1)/2
       }
-        bod[this.state.player] = dim
+        bod[this.state.player] = ','
 
       // Update the board with new data
       this.setState({
@@ -134,7 +135,8 @@ class App extends Component {
 
         [this.state.board[this.state.player-1], this.state.board[this.state.player]] =
                   [this.state.board[this.state.player], this.state.board[this.state.player-1]]
-        // eslint-disable-next-line  
+
+        // eslint-disable-next-line
         this.state.board[this.state.player] = ''
 
         this.setState({
@@ -143,10 +145,17 @@ class App extends Component {
         })
       }
       break;
+
+      default:
     }
-    this.setState({
-      message: this.state.message ,board: this.state.board
+    this.setState({ 
+      board: this.state.board
     })
+    if(this.state.board.indexOf('.')===-1){
+      alert('\n Game over. Total moves: ' + this.state.move);
+      this.setState({move: 1})
+
+  }
   }
   
 
@@ -156,12 +165,18 @@ class App extends Component {
       <div className="app-container">
         <div style={this.state.brd} className="board" onKeyUp = {this.handleKeyPress} tabIndex="0">
         
-        {this.state.board.map((cell) => {
+          {this.state.board.map((cell, index) => {
+            if(cell==='.'){
+              return <div style={this.state.sqr} className="square sprite">{cell}</div>;
+            }else if(cell===','){
+              return <div style={this.state.sqr} className="square player">{cell}</div>;
+            }else{
           return <div style={this.state.sqr} className="square">{cell}</div>;
+            }
         })}
 
         </div>
-        <br/><button onClick={() => this.handleClick()}>{this.state.message+' '+this.state.player+' '+this.state.move+' '+(this.state.board).length}</button><br/><br/>
+        <br/><button onClick={() => this.handleClick()}>{this.state.message}</button><br/><br/>
       </div>
     )
   }
