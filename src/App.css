@@ -22,10 +22,15 @@ span{
   justify-content: center;
   align-items: center;
 }
+.sprite {
+  background-image: url(sprite.png);
+}
+.player {
+  background-image: url(player.png);
+}
 
 .square:hover {
   cursor: pointer;
-  background-color: #80cd92;
 }
 
 
