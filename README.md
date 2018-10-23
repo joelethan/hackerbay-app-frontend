@@ -6,11 +6,10 @@ A board game written ReactJS built on Create React App
 - When the game is done, the User sees the total number of moves taken
 
 ## Installation
-- Install Node js
 - Clone to the repository: `https://github.com/joelethan/hackerbay-app-frontend`
 - Change directory into the root of the project: `cd hackerbay-app-frontend`
 - Install project dependencies: Run `npm install`
-- Start the microservice: `npm start`
+- Start the Game: `npm start`
 
 ## Author
 Katusiime Joel Ian
